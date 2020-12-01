@@ -51,7 +51,7 @@ public class UserPasswordTokenController {
 		     }		
 	}
 	
-	@RequestMapping(value="/verify-password-link",produces="application/json",method = {RequestMethod.POST})
+	@RequestMapping(value="/verify-password-link",produces="application/json",method = {RequestMethod.GET})
 	public ResponseEntity<String> verifyPasswordResetLink(HttpServletRequest req){
 		String response =null;
 		 try {
