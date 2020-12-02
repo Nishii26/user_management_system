@@ -38,7 +38,7 @@ public class UserController {
 		String response =null;
 		 try {
 			    response = userService.registerUser(newUserDetails,res);
-			    return new ResponseEntity<String>(response,HttpStatus.CREATED);
+			    return new ResponseEntity<String>(response,HttpStatus.OK);
 		 	} catch (DataIntegrityViolationException e) {
 		    	logger.error(e.toString());
 				return new ResponseEntity<String>(JsonUtils.getResponseJson(ResponseStatus.DATABASE_EXCEPTION, 
