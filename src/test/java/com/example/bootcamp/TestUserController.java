@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.example.bootcamp.commons.ResponseStatus;
 import com.jayway.jsonpath.JsonPath;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,35 +33,70 @@ public class TestUserController {
   }
 
 	@Test
-	public void loginUser() throws Exception {
+	public void loginUserWithCorrectCredentials() throws Exception {
 		
 	String exampleUserJson = "{ \"emailorPhone\": \"9599944411\", \"password\": \"Qwerty@123\"}";
       MvcResult result = this.mockMvc.perform(post("/login")
 	               .content(exampleUserJson)
 	               .contentType(MediaType.APPLICATION_JSON)).andReturn();
-	               //.andExpect(status().isOk());
       int status = result.getResponse().getStatus();
-      //System.out.println("******** status - " + status);
       assertEquals(HttpStatus.OK.value(), status, "Incorrect Response Status");
-
     }
 	
 	@Test
-	public void registerUser() throws Exception {
+	public void loginUserWithInCorrectCredentials() throws Exception {
 		
-	  String registerJson = "{\"email\": \"shubhamgupta@gmail.com\",\"firstName\": \"shubham\",\"gender\": \"Male\",\"lastName\": \"gupta\",\"password\": \"Qwerty@123\",\"phone\": \"9654259677\",\"userType\": \"USER\"}";
+	String exampleUserJson = "{ \"emailorPhone\": \"9599944411\", \"password\": \"Qwerty@345\"}";
+      MvcResult result = this.mockMvc.perform(post("/login")
+	               .content(exampleUserJson)
+	               .contentType(MediaType.APPLICATION_JSON)).andReturn();
+      int status = result.getResponse().getStatus();
+      System.out.println("******** status - " + status);
+      assertEquals(HttpStatus.FORBIDDEN.value(), status, "Incorrect Response Status");
+    }
+	
+	@Test
+	public void registerUserWithExistingEmail() throws Exception {
+		
+	  String registerJson = "{\"email\": \"gnishtha26@yahoo.com\",\"firstName\": \"nishtha\",\"gender\": \"Female\",\"lastName\": \"gupta\",\"password\": \"Qwerty@123\",\"phone\": \"9599944411\",\"userType\": \"USER\"}";
       MvcResult result = this.mockMvc.perform(post("/user/register")
 	               .content(registerJson)
 	               .contentType(MediaType.APPLICATION_JSON)).andReturn();
-	              // .andExpect(status().isOk());
-					/*
-					 * int status = result.getResponse().getStatus();
-					 * System.out.println("******** status - " + status);
-					 */
-      //System.out.println(result.getResponse().getContentAsString());
       int status= JsonPath.read(result.getResponse().getContentAsString(), "$.status");
-      assertEquals(HttpStatus.OK.value(), status, "Incorrect Response Status");
-
+      assertEquals(ResponseStatus.EMAIL_ALREADY_EXISTS, status, "Incorrect Response Status");
+	}
+	
+	@Test
+	public void registerUserWithInvalidEmail() throws Exception {
+		
+	  String registerJson = "{\"email\": \"gnishtha26.com\",\"firstName\": \"nishtha\",\"gender\": \"Female\",\"lastName\": \"gupta\",\"password\": \"Qwerty@123\",\"phone\": \"9599944411\",\"userType\": \"USER\"}";
+      MvcResult result = this.mockMvc.perform(post("/user/register")
+	               .content(registerJson)
+	               .contentType(MediaType.APPLICATION_JSON)).andReturn();
+      int status= JsonPath.read(result.getResponse().getContentAsString(), "$.status");
+      assertEquals(ResponseStatus.BAD_REQUEST, status, "Incorrect Response Status");
+	}
+	
+	@Test
+	public void registerUserWithInvalidPhone() throws Exception {
+		
+	  String registerJson = "{\"email\": \"nishtha.gupta@quovantis.com\",\"firstName\": \"nishtha\",\"gender\": \"Female\",\"lastName\": \"gupta\",\"password\": \"Qwerty@123\",\"phone\": \"49599911\",\"userType\": \"USER\"}";
+      MvcResult result = this.mockMvc.perform(post("/user/register")
+	               .content(registerJson)
+	               .contentType(MediaType.APPLICATION_JSON)).andReturn();
+      int status= JsonPath.read(result.getResponse().getContentAsString(), "$.status");
+      assertEquals(ResponseStatus.BAD_REQUEST, status, "Incorrect Response Status");
+	}
+	
+	@Test
+	public void registerUserWithExistingPhone() throws Exception {
+		
+	  String registerJson = "{\"email\": \"nishtha.gupta@quovantis.com\",\"firstName\": \"nishtha\",\"gender\": \"Female\",\"lastName\": \"gupta\",\"password\": \"Qwerty@123\",\"phone\": \"9599944411\",\"userType\": \"USER\"}";
+      MvcResult result = this.mockMvc.perform(post("/user/register")
+	               .content(registerJson)
+	               .contentType(MediaType.APPLICATION_JSON)).andReturn();
+      int status= JsonPath.read(result.getResponse().getContentAsString(), "$.status");
+      assertEquals(ResponseStatus.PHONE_ALREADY_EXISTS, status, "Incorrect Response Status");
 	}
 
 }

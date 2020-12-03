@@ -1,6 +1,7 @@
 package com.example.bootcamp.utils;
 
 public class Constant {
+	private Constant() {}
 
 	public static final String AUTHORIZATION_HEADER = "Authorization";
 	public static final String RESET_LINK_HEADER = "Reset-Link";

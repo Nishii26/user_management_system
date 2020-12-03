@@ -4,6 +4,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class CommonUtils {
 	
+	private CommonUtils() {}
+	
 	public static String hashPassword(String rawPassword) {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		return bCryptPasswordEncoder.encode(rawPassword);

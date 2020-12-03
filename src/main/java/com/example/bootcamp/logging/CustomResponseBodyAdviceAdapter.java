@@ -60,9 +60,9 @@ public class CustomResponseBodyAdviceAdapter extends ResponseEntityExceptionHand
     	Gson gson = new Gson();
     	ResponseBody response = new ResponseBody();
     	response.setStatus(ResponseStatus.BAD_REQUEST);
-    	response.setMessage(ex.getBindingResult().getFieldError().getDefaultMessage());
+    	response.setMessage(ex.getBindingResult().toString());
     	response.setData(null);
-    	return new ResponseEntity<Object>(gson.toJson(response).toString(),HttpStatus.BAD_REQUEST);
+    	return new ResponseEntity<>(gson.toJson(response),HttpStatus.BAD_REQUEST);
     }
        
    

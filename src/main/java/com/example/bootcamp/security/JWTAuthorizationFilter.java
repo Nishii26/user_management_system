@@ -82,7 +82,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 							LocalDate currentDate = LocalDate.now();
 							if(claims.getIssuedAt()!=null) {
 								LocalDate issueDate = claims.getIssuedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-								//System.out.println(issueDate.isEqual(currentDate));
 								if(!issueDate.isEqual(currentDate)) {return null;}
 							}else {
 								return null;

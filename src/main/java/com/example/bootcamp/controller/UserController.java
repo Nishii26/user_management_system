@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bootcamp.commons.ResponseMessage;
@@ -29,24 +28,25 @@ public class UserController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
-	@RequestMapping(value="/login",produces="application/json",method = {RequestMethod.POST})
+	@PostMapping(value="/login",produces="application/json")
 	public void loginUser(@RequestBody @Valid CredentialsModel userCredentials) {		
+		//@Todo- The functionality is achieved from JWT and internal spring login API.
 	}
 	
-	@RequestMapping(value="/user/register",produces="application/json",method = {RequestMethod.POST})
+	@PostMapping(value="/user/register",produces="application/json")
 	public ResponseEntity<String> registerUser( @Valid @RequestBody RegistrationModel newUserDetails,HttpServletResponse res){
 		String response =null;
 		 try {
 			    response = userService.registerUser(newUserDetails,res);
-			    return new ResponseEntity<String>(response,HttpStatus.OK);
+			    return new ResponseEntity<>(response,HttpStatus.OK);
 		 	} catch (DataIntegrityViolationException e) {
 		    	logger.error(e.toString());
-				return new ResponseEntity<String>(JsonUtils.getResponseJson(ResponseStatus.DATABASE_EXCEPTION, 
+				return new ResponseEntity<>(JsonUtils.getResponseJson(ResponseStatus.DATABASE_EXCEPTION, 
 																			ResponseMessage.DATA_VALIDATION_ERROR, 
 																			null),HttpStatus.OK);
 		     } catch (Exception e) {
 		    	logger.error(e.toString());
-				return new ResponseEntity<String>(JsonUtils.getResponseJson(ResponseStatus.INTERNAL_ERROR, 
+				return new ResponseEntity<>(JsonUtils.getResponseJson(ResponseStatus.INTERNAL_ERROR, 
 																			ResponseMessage.INTERNAL_ERROR, 
 																			null),HttpStatus.OK);
 		     }		

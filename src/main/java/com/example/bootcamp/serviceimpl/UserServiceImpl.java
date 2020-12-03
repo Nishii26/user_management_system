@@ -1,4 +1,4 @@
-package com.example.bootcamp.serviceImpl;
+package com.example.bootcamp.serviceimpl;
 
 import java.util.Optional;
 
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService{
 		user.setLastName(newUserDetails.getLastName());
 		user.setEmail(newUserDetails.getEmail());
 		if(null != newUserDetails.getPhone())
-			user.setPhone(newUserDetails.getPhone().toString());
+			user.setPhone(newUserDetails.getPhone());
 		user.setUserType(newUserDetails.getUserType());
 		user.setPassword(CommonUtils.hashPassword(newUserDetails.getPassword()));
 		if(null != newUserDetails.getAddress())

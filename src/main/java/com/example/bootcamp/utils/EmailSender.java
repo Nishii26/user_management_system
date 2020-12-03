@@ -76,7 +76,6 @@ public class EmailSender extends Thread{
 	}
 
 	public void run() {
-		long start = System.currentTimeMillis();
 		final String username = Constant.SMTP_USERNAME;
         final String password = Constant.SMTP_PASSWORD;
 
@@ -95,18 +94,16 @@ public class EmailSender extends Thread{
 		});
         
 		try {
-			String to_email = email;
+			String toEmail = email;
 			
-			System.out.println(to_email);
 			Message message = new MimeMessage(session);
 			message.setContent(text, "text/html; charset=utf-8");
 
 			message.setFrom(new InternetAddress(Constant.EMAIL, businessName));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to_email));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 			if (cc != null)
 				message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc));
 			message.setSubject(subject);
-//			message.setText("DDD");
 			message.setHeader("X-MC-Tags", "non-mandotary");
 			try {Transport.send(message);
 			logger.info("Successfully email sent to : "+email);
@@ -117,20 +114,16 @@ public class EmailSender extends Thread{
 				logger.info("Failure in email : "+email);
 				// TODO: handle exception
 			}
-			long end = System.currentTimeMillis();
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
 	public static void sendEmail(String email, String subject, String name, String text,String businessName) {
-	
-		/*
-		 * System.out.println(email); System.out.println(subject);
-		 * System.out.println(name); System.out.println(businessName);
-		 */		
-		EmailSender message_sender = new EmailSender(email, subject, name, text,businessName);
-		message_sender.run();
+		
+		EmailSender messageSender = new EmailSender(email, subject, name, text,businessName);
+		messageSender.run();
 	}
 
 }

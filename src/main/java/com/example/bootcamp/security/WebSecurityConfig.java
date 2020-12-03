@@ -48,7 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationEntryPoint authenticationEntryPoint(){
         return new CustomAuthenticationEntryPoint();
     }
-	 public void configure(WebSecurity web) throws Exception {
+	@Override
+	public void configure(WebSecurity web) throws Exception {
 			web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
 					"/configuration/security", "/swagger-ui.html", "/webjars/**", "/v2/swagger.json" );
 	    }

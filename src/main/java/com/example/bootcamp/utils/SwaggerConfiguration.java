@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfiguration {
 	
 	@Bean
-    public Docket DailyWageApi() {
+    public Docket userContactApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()                 
                 .apis(RequestHandlerSelectors.any())
@@ -34,15 +34,14 @@ public class SwaggerConfiguration {
     }
 
 	private ApiInfo metaData() {
-        ApiInfo apiInfo = new ApiInfo(
+        return  new ApiInfo(
                 "User-Contact API",
                 "User-Contact REST API Framework",
                 "1.0",
                 "Terms of service",
-                new Contact("User-Contact", "User-Contact","User-Contact"),
+                new Contact("User-Contact", null,null),
                "Apache License Version 2.0",
                 "https://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
-        return apiInfo;
     }
 
 }

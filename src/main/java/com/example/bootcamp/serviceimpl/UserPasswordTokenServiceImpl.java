@@ -1,4 +1,4 @@
-package com.example.bootcamp.serviceImpl;
+package com.example.bootcamp.serviceimpl;
 
 import java.util.Base64;
 import java.util.Optional;
@@ -26,7 +26,7 @@ import com.example.bootcamp.utils.Timings;
 import com.google.gson.Gson;
 
 @Service
-public class userPasswordTokenServiceImpl implements UserPasswordTokenService{
+public class UserPasswordTokenServiceImpl implements UserPasswordTokenService{
 	
 	@Autowired
 	UserPasswordTokenRepo userPasswordTokenRepo;
@@ -51,7 +51,7 @@ public class userPasswordTokenServiceImpl implements UserPasswordTokenService{
 				String encodedEmail = Base64.getEncoder().encodeToString(userByEmail.getEmail().getBytes());
 				
 				String link = "";
-				if (Constant.LIVE_SERVER)
+				if (Constant.LIVE_SERVER.equals(true))
 					link = Constant.FORGOT_PASSWORD_LINK_PRODUCTION + "?token="+encodedToken+"&email="+encodedEmail;
 				else
 					link = Constant.FORGOT_PASSWORD_LINK_DEVELOPMENT +"?token="+ encodedToken+"&email="+encodedEmail;
@@ -72,7 +72,7 @@ public class userPasswordTokenServiceImpl implements UserPasswordTokenService{
 						 null);
 			}
 		}else {
-			return JsonUtils.getResponseJson(ResponseStatus.NO_DATA_FOUND, 
+			return JsonUtils.getResponseJson(ResponseStatus.BAD_REQUEST, 
 											 ResponseMessage.EMAIL_OR_PHONE_NOT_FOUND, 
 											 null);
 		}
@@ -86,10 +86,10 @@ public class userPasswordTokenServiceImpl implements UserPasswordTokenService{
 		String encodedEmail = splitByEquals[3];
 		String encodedToken = splitByEquals[1];
 				
-		byte[] decodedBytes_token = Base64.getDecoder().decode(encodedToken); 
-		String decodedToken = new String(decodedBytes_token);
-		byte[] decodedBytes_email = Base64.getDecoder().decode(encodedEmail);
-		String decodedEmail = new String(decodedBytes_email);
+		byte[] decodedBytesToken = Base64.getDecoder().decode(encodedToken); 
+		String decodedToken = new String(decodedBytesToken);
+		byte[] decodedBytesEmail = Base64.getDecoder().decode(encodedEmail);
+		String decodedEmail = new String(decodedBytesEmail);
 		
 		Optional<UserPasswordToken> userPasswordToken = userPasswordTokenRepo.findByPasswordToken(decodedToken);
 		if(!userPasswordToken.isPresent()) {
@@ -97,7 +97,7 @@ public class userPasswordTokenServiceImpl implements UserPasswordTokenService{
 											 ResponseMessage.EMAIL_OR_RESET_LINK_INVALID, 
 											 null);
 		}else {
-			if(!userPasswordToken.get().getIsActive()) {
+			if(!userPasswordToken.get().getIsActive().equals(true)) {
 				return JsonUtils.getResponseJson(ResponseStatus.FAILED,
 							                     ResponseMessage.RESET_LINK_EXPIRED,
 							                     null);
@@ -136,11 +136,11 @@ public class userPasswordTokenServiceImpl implements UserPasswordTokenService{
 		String[] splitByEquals = resetLink.split("=", 4); 
 		String encodedToken = splitByEquals[1];
 		
-		byte[] decodedBytes_token = Base64.getDecoder().decode(encodedToken);
-		String decodedToken = new String(decodedBytes_token);
+		byte[] decodedBytesToken = Base64.getDecoder().decode(encodedToken);
+		String decodedToken = new String(decodedBytesToken);
 		
-		byte[] decodedBytes_email = Base64.getDecoder().decode(resetPasswordModel.getEmail());
-		String decodedEmail = new String(decodedBytes_email);
+		byte[] decodedBytesEmail = Base64.getDecoder().decode(resetPasswordModel.getEmail());
+		String decodedEmail = new String(decodedBytesEmail);
 				
 		if(!resetPasswordModel.getConfirmPassword().equalsIgnoreCase(resetPasswordModel.getNewPassword()))
 			return JsonUtils.getResponseJson(ResponseStatus.FAILED,
